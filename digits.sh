@@ -4,6 +4,9 @@ NVIDIA_DRIVER_VERSION=384.59
 NVIDIA_DOCKER_VERSION=1.0.1
 DOCKER_VERSION=17.06.0~ce-0~ubuntu
 
+# Admin user
+USER=$1
+
 # Getting ready for the NVIDIA driver installation
 apt-get update && apt-get install -y build-essential
 
@@ -21,8 +24,8 @@ apt-get update && apt-get install -y docker-ce="$DOCKER_VERSION"
 wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v$NVIDIA_DOCKER_VERSION/nvidia-docker_$NVIDIA_DOCKER_VERSION-1_amd64.deb
 dpkg -i /tmp/nvidia-docker*.deb && rm /tmp/nvidia-docker*.deb
 
-# Allow non-root users to use docker without sudo
-usermod -aG docker `getent group sudo | cut -d: -f4`
+# Allow the admin user to run docker without sudo
+usermod -aG docker $USER
 
 BASE_DIR=/home/$USER
 sudo -u $USER mkdir -p $BASE_DIR/data/

@@ -239,7 +239,7 @@
           "fileUris": [
             "https://raw.githubusercontent.com/meken/nvidia-digits/master/digits.sh"
           ],
-          "commandToExecute": "sh digits.sh"
+          "commandToExecute": "[concat('sh digits.sh', ' ', parameters('adminUsername'))]"
         }
       }
     }
