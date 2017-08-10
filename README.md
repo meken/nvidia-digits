@@ -15,7 +15,7 @@ A sample ```deploy.sh``` file is provided to run the template from the cloudshel
 ```bash
 git clone https://github.com/meken/nvidia-docker.git
 cd nvidia-docker
-./deploy.sh azure-digits.json
+./deploy.sh -g digitsRG -l "West Europe" azure-digits.json
 ```
 
-If you don't provide the resource group name and location when you run ```deploy.sh```, you'll be prompted for that. You'll be prompted for the template parameters as well (VM size, admin user name, public key etc.)
+If you don't provide the resource group name and location when you run ```deploy.sh```, you'll be prompted for that. You'll be prompted for the non-default template parameters as well (prefix, admin user name, public key etc.)
