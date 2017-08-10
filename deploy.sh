@@ -13,7 +13,7 @@ declare resourceGroupName=""
 declare resourceGroupLocation=""
 
 # Initialize parameters specified from command line
-while getopts ":i:g:n:l:" arg; do
+while getopts ":i:g:l:" arg; do
 	case "${arg}" in
 		i)
 			subscriptionId=${OPTARG}
@@ -34,6 +34,10 @@ if [[ -z "$resourceGroupName" ]]; then
 	read resourceGroupName
 fi
 
+if [[ -z "$resourceGroupLocation" ]]; then
+	echo "ResourceGroupLocation:"
+	read resourceGroupLocation
+fi
 
 # Template file to be used
 templateFilePath=$1
@@ -57,15 +61,8 @@ fi
 set +e
 
 # Check whether the resource group already exists
-az group show -n $resourceGroupName 1> /dev/null
-
-if [[ $? != 0 ]]; then
-	echo "Resource group with name" $resourceGroupName "could not be found. Creating new resource group.."
-
-        if [[ -z "$resourceGroupLocation" ]]; then
-	     echo "ResourceGroupLocation:"
-	     read resourceGroupLocation
-        fi
+if [[ ! $(az group show -n $resourceGroupName -o tsv) ]]; then
+	echo "Resource group with name" $resourceGroupName "could not be found. Creating new resource group..."
 
 	set -e
 	(
@@ -80,11 +77,10 @@ fi
 echo "Starting deployment..."
 (
 	set -x
-	az group deployment create --name "CLI Deploy $resourceGroupName" --resource-group $resourceGroupName --template-file $templateFilePath 
+	az group deployment create --name "CLI-Deploy-$resourceGroupName" --resource-group $resourceGroupName --template-file $templateFilePath 
 )
 
-if [[ $?  == 0 ]];
- then
+if [[ $?  == 0 ]]; then
 	echo "Template has been successfully deployed"
 fi
 
