@@ -30,6 +30,15 @@ usermod -aG docker $USER
 BASE_DIR=/home/$USER
 sudo -u $USER mkdir -p $BASE_DIR/data/
 
+# Sometimes it takes a while before the nvidia-docker is running, waiting for it before creating the volume
+while [ ! -S /var/lib/nvidia-docker/nvidia-docker.sock ]
+do
+	echo $(date) "Waiting for nvidia-docker to start..."
+	sleep 3
+done
+
+echo $(date) "Socket found"
+
 # Create the nvidia volume to prevent issues later, see https://github.com/NVIDIA/nvidia-docker/issues/112
 docker volume create -d nvidia-docker --name nvidia_driver_$NVIDIA_DRIVER_VERSION
 
